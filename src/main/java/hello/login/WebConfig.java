@@ -1,5 +1,6 @@
 package hello.login;
 
+import hello.login.web.argumentresolver.LoginMemberArgumentResolver;
 import hello.login.web.filter.LogFilter;
 import hello.login.web.filter.LoginCheckFilter;
 import hello.login.web.interceptor.LogInterceptor;
@@ -9,8 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.servlet.Filter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -51,6 +55,11 @@ public class WebConfig implements WebMvcConfigurer {
                         "/", "/members/add", "/login", "/logout",
                         "/css/**", "/*.ico", "/error"
                 ); // LoginCheckInterceptor에서 whiteList를 만들지 않고, 인터셉터를 등록할 때, 위와 같이 제외할 패턴을 지정함
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(new LoginMemberArgumentResolver()); // argumentResolver 등록
     }
 
 }
